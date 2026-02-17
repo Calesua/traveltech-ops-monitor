@@ -4,41 +4,68 @@ Author: Cristian Alemán Suárez
 
 ## Overview
 
-This project demonstrates how public travel-related content signals can be automatically collected, processed and transformed into actionable insights for content and product teams in a TravelTech context.
+This project showcases an end-to-end, operations-oriented data pipeline designed to monitor public travel-related content and transform heterogeneous signals into actionable insights.
 
-It is designed as an operations-focused system that reduces manual analysis and supports recurring decision-making through automated reporting.
+The system is tailored for **TravelTech product, content, and operations teams** that need recurring, lightweight monitoring to support editorial planning, trend detection, and strategic decision-making.
+
+---
+
+## Why This Project
+
+Rather than focusing on predictive modeling, this project emphasizes:
+
+- Building **reproducible data pipelines**
+- Designing **operational metrics** aligned with real decisions
+- Handling **incomplete and heterogeneous public data**
+- Producing **interpretable insights**, not just raw analytics
+
+It reflects the kind of systems commonly found in product analytics, content intelligence, and data operations roles.
 
 ---
 
 ## Objective
 
-The goal of this project is to monitor travel-related trends from public content sources, normalize heterogeneous data, compute relevant operational metrics and generate a recurring report with clear insights and recommendations for stakeholders.
+The goal is to automatically monitor travel-related trends from public content sources, normalize the data, compute meaningful operational signals, and generate recurring reports and dashboards.
 
-Typical decisions supported by this system include:
+Typical decisions supported include:
 - Identifying emerging destinations or topics
 - Detecting saturated vs underexplored content areas
-- Understanding publishing frequency and focus across sources
+- Understanding publishing cadence and focus across sources
+- Spotting short-term keyword momentum and potential content gaps
 
 ---
 
-## How It Works
+## Architecture & Pipeline
 
-The pipeline follows a simple and reproducible operations-oriented flow:
+The pipeline follows a simple, reproducible flow:
 
 1. **Data collection**  
-   Public content sources are queried to extract raw travel-related data using `fetch.py`.  
-   Raw data is stored in `data/raw/` for traceability and reproducibility.
+   Public content sources are queried via `fetch.py`.  
+   Raw HTML / RSS data is stored in `data/raw/` for traceability.
 
-2. **Normalization and processing**  
-   `parse.py` transforms heterogeneous inputs into a unified and structured format.  
-   Normalized datasets are stored in `data/processed/`.
+2. **Normalization & parsing**  
+   `parse.py` converts heterogeneous inputs (RSS + HTML) into a unified JSONL schema.  
+   Processed data is stored in `data/processed/`.
 
 3. **Metrics computation**  
-   `metrics.py` calculates operational metrics and comparative signals relevant for content and trend analysis.
+   `metrics.py` computes operational signals, including:
+   - **Source volume**: total items, items per source  
+   - **Freshness / recency**: last 7 days, most recent item per source  
+   - **Publishing cadence**: daily volume over the last 30 days  
+   - **Topics**: top keywords in titles (global and per source)  
+   - **Trending keywords**: week-over-week keyword deltas  
+   - **Data quality**: duplicated URLs and titles (syndication signals)
 
 4. **Automated reporting**  
-   `report.py` generates an automated report including summaries, tables and recommendations.  
-   Reports are stored in the `reports/` directory.
+   `report.py` generates a markdown report with summaries, tables, and recommendations.  
+   Reports are stored in `reports/`.
+
+5. **Automated dashboard**  
+   `dashboard.py` produces a static HTML dashboard with:
+   - Post volume by source  
+   - Publishing cadence (last 30 days)  
+   - Top and trending keywords  
+   Dashboards are stored in `reports/`.
 
 ---
 
@@ -61,18 +88,30 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Run the pipeline:
+Run the full pipeline:
 ```bash
 python run_weekly.py
 ```
 
-This command executes the full pipeline from data collection to report generation.
+This executes the complete workflow from data collection to reporting and dashboard generation.
 
-## Limitations and Future Improvements
+## Limitations & Future Improvements
 
-- The pipeline is currently executed manually and simulates a weekly reporting cadence.
-- Scheduling (e.g. cron or task scheduler) is not yet implemented.
-- Engagement metrics are inferred from content signals and do not include private analytics data.
-- The followed apporach overwrites previous versions of raw data. Some version control can be applied.
+- The pipeline currently runs manually and simulates a weekly cadence.
+- Scheduling (cron / task scheduler) is not yet implemented.
+- Engagement metrics are inferred from public signals and do not include private analytics.
+- Raw data snapshots are overwritten; historical accumulation would enable stronger time-series analysis.
+- Cadence and trend signals strengthen as data accumulates across multiple runs.
 
-Despite these limitations, the system already automates the majority of the workflow and serves as a solid proof of concept for an operations-oriented monitoring tool.
+Despite these limitations, the system already automates most of the monitoring workflow and serves as a solid proof of concept for an operations-focused monitoring tool.
+
+
+## Output examples
+
+### Automated Report
+![alt text](images/report1.png)
+
+![alt text](images/report2.png)
+
+### Dashboard
+![alt text](images/dashboard.png)
