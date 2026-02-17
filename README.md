@@ -102,6 +102,7 @@ This executes the complete workflow from data collection to reporting and dashbo
 - Engagement metrics are inferred from public signals and do not include private analytics.
 - Raw data snapshots are overwritten; historical accumulation would enable stronger time-series analysis.
 - Cadence and trend signals strengthen as data accumulates across multiple runs.
+- Integration of a LLM to give more advanced recomendations.
 
 Despite these limitations, the system already automates most of the monitoring workflow and serves as a solid proof of concept for an operations-focused monitoring tool.
 
