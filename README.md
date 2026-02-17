@@ -115,3 +115,6 @@ Despite these limitations, the system already automates most of the monitoring w
 
 ### Dashboard
 ![alt text](images/dashboard.png)
+
+## License
+MIT License
